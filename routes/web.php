@@ -2,17 +2,19 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It is a breeze. Simply tell Lumen the URIs it should respond to
-| and give it the Closure to call when that URI is requested.
-|
-*/
-
+// Public route for testing
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+// Group of routes that require JWT Authentication
+$router->group(['middleware' => 'jwt.auth'], function () use ($router) {
+    // Route to fetch data from Site 1
+    $router->get('/site1', 'GatewayController@getSite1Data');
+    
+    // Route to fetch data from Site 2
+    $router->get('/site2', 'GatewayController@getSite2Data');
+});
+
+// Public route for non-authenticated users (if you need)
+$router->get('/public', 'GatewayController@getPublicData');
